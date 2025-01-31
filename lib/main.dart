@@ -141,7 +141,7 @@ class _AdhanAppState extends State<AdhanApp> {
       if (prayerTime.isAfter(now)) {
         final difference = prayerTime.difference(now);
         Future.delayed(difference, () async {
-          await player.play(AssetSource('adhan.mp3')).then((value) {
+          await player.play(AssetSource('azan.mp3')).then((value) {
             print('${prayer['label']} Azan started playing');
           });
 
