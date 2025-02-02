@@ -100,7 +100,10 @@ class _AdhanAppState extends State<AdhanApp> {
   Future<void> fetchPrayerTimes() async {
     if (latitude == 0.0 || longitude == 0.0) return;
 
+    // Use Hanafi method for Asr prayer calculation
     final params = CalculationMethod.karachi.getParameters();
+    params.madhab = Madhab.hanafi;
+
     final coordinates = Coordinates(latitude, longitude);
     final prayerTimesData = PrayerTimes.today(coordinates, params);
 
@@ -131,7 +134,7 @@ class _AdhanAppState extends State<AdhanApp> {
     final prayerTimesList = [
       {'time': prayerTimesData.fajr, 'label': 'Fajr'},
       {'time': prayerTimesData.dhuhr, 'label': 'Dhuhr'},
-      {'time': prayerTimesData.asr, 'label': 'Asr'},
+      {'time': prayerTimesData.asr, 'label': 'Asr (Hanafi)'},
       {'time': prayerTimesData.maghrib, 'label': 'Maghrib'},
       {'time': prayerTimesData.isha, 'label': 'Isha'}
     ];
@@ -145,12 +148,11 @@ class _AdhanAppState extends State<AdhanApp> {
             print('${prayer['label']} Azan started playing');
           });
 
-        player.onPlayerStateChanged.listen((state) {
-  if (state == PlayerState.completed) {
-    print('${prayer['label']} Azan finished playing');
-  }
-});
-
+          player.onPlayerStateChanged.listen((state) {
+            if (state == PlayerState.completed) {
+              print('${prayer['label']} Azan finished playing');
+            }
+          });
 
           _showNotification(prayer['label'] as String);
         });
@@ -202,7 +204,7 @@ class _AdhanAppState extends State<AdhanApp> {
                 contentPadding: EdgeInsets.all(16),
                 leading: Icon(Icons.access_time, color: Colors.black45),
                 title: Text(
-                  ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'][index],
+                  ['Fajr', 'Dhuhr', 'Asr (Hanafi)', 'Maghrib', 'Isha'][index],
                   style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
                 ),
                 subtitle: Text(
